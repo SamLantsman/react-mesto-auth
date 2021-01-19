@@ -1,0 +1,5 @@
+.popup__image-picture {
+    max-width: 75vw;
+    max-height: 75vh;
+    align-self: flex-start;
+}

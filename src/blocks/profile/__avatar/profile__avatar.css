@@ -1,0 +1,21 @@
+.profile__avatar {
+    margin-right: 30px;
+    max-height: 120px;
+}
+
+.profile__avatar:hover .profile__image {
+    opacity: 0.6;
+    transition: opacity .2s ease;
+}
+
+.profile__avatar:hover .profile__edit-avatar {
+    opacity: 1;
+    transition: opacity .2s ease;
+}
+
+@media screen and (max-width: 1050px) {
+    .profile__avatar {
+        margin: 0 auto;
+        padding-bottom: 14px;
+    }
+}

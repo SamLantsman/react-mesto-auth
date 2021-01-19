@@ -1,0 +1,29 @@
+.popup__text {
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 17px;
+    text-align: left;
+    border: none;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+    width: 100%;
+    box-sizing: border-box;
+    padding-bottom: 13px;
+    margin-top: 30px;
+    outline: none;
+    padding-bottom: 5px;
+}
+
+.popup__text::placeholder {
+    color: #808080;
+    margin-top: 10px;
+}
+
+.popup__text:first-of-type {
+    margin: 0;
+}
+
+@media screen and (max-width: 570px) {
+    .popup__text {
+        margin-top: 30px;
+    }
+}

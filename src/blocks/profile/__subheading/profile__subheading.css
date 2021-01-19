@@ -1,0 +1,16 @@
+.profile__subheading {
+    margin: 0;
+    font-weight: normal;
+    font-size: 18px;
+    line-height: 22px;
+    margin-top: 16px;
+}
+
+@media screen and (max-width: 1050px) {
+    .profile__subheading {
+        font-size: 14px;
+        line-height: 17px;
+        text-align: center;
+        margin-top: 14px;
+    }
+}

@@ -1,0 +1,6 @@
+.popup__image-close-image {
+    position: absolute;
+    align-self: flex-end;
+    right: -35px;
+    top: -35px;
+}
