@@ -1,5 +1,5 @@
 .popup__image-picture {
-    max-width: 75vw;
-    max-height: 75vh;
+    max-width: 100%;
+    max-height: inherit;
     align-self: flex-start;
 }

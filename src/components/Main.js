@@ -28,7 +28,7 @@ function Main(props) {
             className="profile__edit-avatar"
             type="button"
             onClick={props.onEditAvatar}
-          ></button>
+          />
         </div>
         <div className="profile__info">
           <div className="profile__info-block">
@@ -36,14 +36,11 @@ function Main(props) {
             <button
               className="profile__edit-button"
               onClick={props.onEditProfile}
-            ></button>
+            />
           </div>
           <p className="profile__job">{userDescription}</p>
         </div>
-        <button
-          className="profile__add-button"
-          onClick={props.onAddPlace}
-        ></button>
+        <button className="profile__add-button" onClick={props.onAddPlace} />
       </section>
       <section className="gallery">
         {cards.map((item) => (
