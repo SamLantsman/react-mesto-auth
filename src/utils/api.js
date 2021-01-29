@@ -21,7 +21,7 @@ class Api {
       headers: this._headers,
       body: JSON.stringify({
         name: data.name,
-        about: data.job,
+        about: data.about,
       }),
     }).then((res) => {
       if (res.ok) {
@@ -85,28 +85,30 @@ class Api {
     });
   }
 
-  addLike(cardId) {
-    return fetch(`${this._url}cards/likes/${cardId}`, {
-      method: "PUT",
-      headers: this._headers,
-    }).then((res) => {
-      if (res.ok) {
-        return res.json();
-      }
-      return Promise.reject(`Ошибка: ${res.status}`);
-    });
-  }
+  changeLikeCardStatus(cardId, isLiked) {
 
-  removeLike(cardId) {
-    return fetch(`${this._url}cards/likes/${cardId}`, {
-      method: "DELETE",
-      headers: this._headers,
-    }).then((res) => {
-      if (res.ok) {
-        return res.json();
-      }
-      return Promise.reject(`Ошибка: ${res.status}`);
-    });
+    if(isLiked) {
+      return fetch(`${this._url}cards/likes/${cardId}`, {
+        method: "PUT",
+        headers: this._headers,
+      }).then((res) => {
+        if (res.ok) {
+          return res.json();
+        }
+        return Promise.reject(`Ошибка: ${res.status}`);
+      });
+    } else {
+      return fetch(`${this._url}cards/likes/${cardId}`, {
+        method: "DELETE",
+        headers: this._headers,
+      }).then((res) => {
+        if (res.ok) {
+          return res.json();
+        }
+        return Promise.reject(`Ошибка: ${res.status}`);
+      });
+    }
+    
   }
 }
 
