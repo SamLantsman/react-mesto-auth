@@ -1,17 +1,26 @@
 import React from "react";
 import PopupWithForm from "./PopupWithForm";
 function AddPlacePopup(props) {
-  const nameRef = React.createRef();
-  const cardLinkRef = React.createRef();
+  const [cardName, setCardName] = React.useState('');
+  const [cardLink, setCardLink] = React.useState('');
+
+  function handleNameChange(e) {
+    setCardName(e.target.value)
+  }
+
+  function handleLinkChange(e) {
+    setCardLink(e.target.value)
+  }
 
   function handleSubmit(e) {
+
     e.preventDefault();
     props.onAddCard({
-      name: nameRef.current.value,
-      link: cardLinkRef.current.value,
+      name: cardName,
+      link: cardLink,
     });
-    nameRef.current.value = "";
-    cardLinkRef.current.value = "";
+    setCardName('');
+    setCardLink('');
   }
   return (
     <PopupWithForm
@@ -31,8 +40,8 @@ function AddPlacePopup(props) {
         minLength="2"
         required
         id="profile-input"
-        ref={nameRef}
         defaultValue=""
+        onChange={handleNameChange}
       />
       <span className="popup__text_error" id="name-input-error"></span>
       <input
@@ -41,8 +50,8 @@ function AddPlacePopup(props) {
         className="popup__text popup__text-image"
         required
         id="link-input"
-        ref={cardLinkRef}
         defaultValue=""
+        onChange={handleLinkChange}
       />
       <span className="popup__text_error" id="link-input-error"></span>
     </PopupWithForm>

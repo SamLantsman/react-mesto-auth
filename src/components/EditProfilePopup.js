@@ -24,9 +24,21 @@ function EditProfilePopup(props) {
     setName(e.target.value);
   }
 
-  function  handleJobChange(e) {
+  function handleJobChange(e) {
     setJob(e.target.value);
   }
+
+  React.useEffect(() => {
+    if (name !== undefined && job !== undefined) {
+      const isNameFilled = name.length >= 2 && name.length <= 40;
+      const nameFieldValid = isNameFilled;
+
+      const isJobFilled = job.length >= 2 && job.length <= 200;
+      const jobFieldValid = isJobFilled;
+
+      console.log(nameFieldValid, jobFieldValid);
+    }
+  });
 
   return (
     <PopupWithForm

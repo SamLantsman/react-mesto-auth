@@ -15,24 +15,39 @@ function App() {
   const [currentUser, setCurrentUser] = React.useState({});
 
   React.useEffect(() => {
-    api.getUserInfo().then((user) => {
-      setCurrentUser(user);
-    });
+    api
+      .getUserInfo()
+      .then((user) => {
+        setCurrentUser(user);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }, []);
 
   React.useEffect(() => {
-    api.getCardsInfo().then((data) => {
-      setCards(data);
-    });
+    api
+      .getCardsInfo()
+      .then((data) => {
+        setCards(data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }, []);
 
   function handleCardLike(card) {
     const isLiked = card.likes.some((i) => i._id === currentUser._id);
 
-    api.changeLikeCardStatus(card._id, !isLiked).then((newCard) => {
-      const newCards = cards.map((c) => (c._id === card._id ? newCard : c));
-      setCards(newCards);
-    });
+    api
+      .changeLikeCardStatus(card._id, !isLiked)
+      .then((newCard) => {
+        const newCards = cards.map((c) => (c._id === card._id ? newCard : c));
+        setCards(newCards);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }
 
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = React.useState(
@@ -72,6 +87,9 @@ function App() {
 
         setCards(newCards);
       })
+      .catch((err) => {
+        console.log(err);
+      })
       .finally(() => {
         closeAllPopups();
       });
@@ -109,6 +127,9 @@ function App() {
       .then((newCard) => {
         setCards([newCard, ...cards]);
       })
+      .catch((err) => {
+        console.log(err);
+      })
       .finally(() => {
         closeAllPopups();
       });
@@ -131,6 +152,9 @@ function App() {
       .then((newUser) => {
         setCurrentUser(newUser);
       })
+      .catch((err) => {
+        console.log(err);
+      })
       .finally(() => {
         closeAllPopups();
       });
@@ -142,6 +166,9 @@ function App() {
       .updateAvatar(link)
       .then((userWithNewAvatar) => {
         setCurrentUser(userWithNewAvatar);
+      })
+      .catch((err) => {
+        console.log(err);
       })
       .finally(() => {
         closeAllPopups();
