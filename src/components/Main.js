@@ -1,14 +1,25 @@
 import React from "react";
 import Card from "./Card";
+import Footer from "./Footer";
+import ImagePopup from "./ImagePopup";
+import EditProfilePopup from "./EditProfilePopup";
+import AddCardPopup from "./AddCardPopup";
+import EditAvatarPopup from "./EditAvatarPopup";
+import ConfirmDeleteCardPopup from "./ConfirmDeleteCardPopup";
 import { CurrentUserContext } from "../contexts/CurrentUserContext";
+import Header from "./Header";
 
 function Main(props) {
-
   const currentUser = React.useContext(CurrentUserContext);
-
 
   return (
     <main className="content">
+      <Header
+        button="Выйти"
+        onClick={props.onClick}
+        email={props.email}
+        faded={props.faded}
+      />
       <section className="profile">
         <div className="profile__avatar">
           <img
@@ -49,6 +60,37 @@ function Main(props) {
           />
         ))}
       </section>
+      <Footer />
+      <ImagePopup
+        isOpen={props.isOpen}
+        src={props.src}
+        name={props.name}
+        onClose={props.onClose}
+      />
+      <EditProfilePopup
+        isOpen={props.isOpenProfilePopup}
+        onClose={props.onClose}
+        onUpdateUser={props.onUpdateUser}
+        isLoading={props.isLoading}
+      />
+      <AddCardPopup
+        onClose={props.onClose}
+        isOpen={props.isOpenAddPlace}
+        onAddCard={props.onAddCard}
+        isLoading={props.isLoading}
+      />
+      <EditAvatarPopup
+        isOpen={props.isOpenAvatar}
+        onUpdateAvatar={props.onUpdateAvatar}
+        onClose={props.onClose}
+        isLoading={props.isLoading}
+      />
+      <ConfirmDeleteCardPopup
+        onClose={props.onClose}
+        isOpen={props.isOpenDeleteCard}
+        onConfirmDeleteCard={props.onConfirmDeleteCard}
+        isLoading={props.isLoading}
+      />
     </main>
   );
 }

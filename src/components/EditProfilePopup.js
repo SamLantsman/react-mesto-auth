@@ -35,8 +35,6 @@ function EditProfilePopup(props) {
 
       const isJobFilled = job.length >= 2 && job.length <= 200;
       const jobFieldValid = isJobFilled;
-
-      console.log(nameFieldValid, jobFieldValid);
     }
   });
 

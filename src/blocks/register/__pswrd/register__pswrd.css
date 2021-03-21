@@ -1,0 +1,14 @@
+.register__pswrd {
+  font-size: 14px;
+  line-height: 17px;
+  border: none;
+  width: 100%;
+  box-sizing: border-box;
+  padding-bottom: 13px;
+  margin-top: 30px;
+  outline: none;
+  padding-bottom: 5px;
+  background-color: #000;
+  border-bottom: 1px solid #fff;
+  color: #fff;
+}

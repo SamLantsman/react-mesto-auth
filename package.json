@@ -1,5 +1,6 @@
 {
     "name": "mesto-react",
+    "homepage": ".",
     "version": "0.1.0",
     "private": true,
     "dependencies": {
@@ -8,6 +9,7 @@
         "@testing-library/user-event": "^12.6.0",
         "react": "^17.0.1",
         "react-dom": "^17.0.1",
+        "react-router-dom": "^5.2.0",
         "react-scripts": "4.0.1",
         "web-vitals": "^0.2.4"
     },
@@ -40,5 +42,8 @@
         "email": "samlantsman@gmail.com",
         "url": "https://www.facebook.com/sam.lantsman"
     },
-    "description": "initial react application"
+    "description": "initial react application",
+    "devDependencies": {
+        "prettier": "2.2.1"
+    }
 }

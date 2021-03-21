@@ -1,18 +1,24 @@
 import "../index.css";
 import React from "react";
-import Header from "./Header";
 import Main from "./Main";
-import Footer from "./Footer";
-import ImagePopup from "./ImagePopup";
-import EditProfilePopup from "./EditProfilePopup";
-import EditAvatarPopup from "./EditAvatarPopup";
-import AddCardPopup from "./AddCardPopup";
-import ConfirmDeleteCardPopup from "./ConfirmDeleteCardPopup";
 import api from "../utils/api";
+import * as auth from "../utils/auth";
+import Login from "../components/Login";
+import Register from "../components/Register";
+import ProtectedRoute from "./ProtectedRoute";
 import { CurrentUserContext } from "../contexts/CurrentUserContext";
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Redirect,
+  Link,
+} from "react-router-dom";
 
 function App() {
   const [currentUser, setCurrentUser] = React.useState({});
+
+  const [isLoggedIn, setIsLoggedIn] = React.useState(false);
 
   React.useEffect(() => {
     api
@@ -34,6 +40,10 @@ function App() {
       .catch((err) => {
         console.log(err);
       });
+  }, []);
+
+  React.useEffect(() => {
+    tockenCheck();
   }, []);
 
   function handleCardLike(card) {
@@ -175,54 +185,91 @@ function App() {
       });
   }
 
+  const [email, setEmail] = React.useState("");
+
+  function handleLogin(email) {
+    setIsLoggedIn(true);
+    setEmail(email);
+  }
+
+  function tockenCheck() {
+    const token = localStorage.getItem("token");
+    if (token) {
+      auth.getContent(token).then((res) => {
+        if (res) {
+          setIsLoggedIn(true);
+          // history.push("/main");
+        }
+      });
+    }
+  }
+
+  function signOut() {
+    localStorage.removeItem("token");
+    setIsLoggedIn(false);
+  }
+
   return (
-    <CurrentUserContext.Provider value={currentUser}>
-      <div className="App">
-        <div className="page">
-          <Header />
-          <Main
-            onEditProfile={handleEditProfileClick}
-            onEditAvatar={handleEditAvatarClick}
-            onAddPlace={handleAddPlaceClick}
-            onCardClick={handleCardClick}
-            cards={cards}
-            onCardLike={handleCardLike}
-            onCardDelete={handleDeleteCardClick}
-          />
-          <Footer />
-          <ImagePopup
-            isOpen={selectedCard.isOpen}
-            src={selectedCard.link}
-            name={selectedCard.name}
-            onClose={closeAllPopups}
-          />
-          <EditProfilePopup
-            isOpen={isEditProfilePopupOpen}
-            onClose={closeAllPopups}
-            onUpdateUser={handleUpdateUser}
-            isLoading={isLoading}
-          />
-          <EditAvatarPopup
-            onClose={closeAllPopups}
-            isOpen={isEditAvatarPopupOpen}
-            onUpdateAvatar={handleUpdateAvatar}
-            isLoading={isLoading}
-          ></EditAvatarPopup>
-          <AddCardPopup
-            onClose={closeAllPopups}
-            isOpen={isAddPlacePopupOpen}
-            onAddCard={handleAddCardSubmit}
-            isLoading={isLoading}
-          ></AddCardPopup>
-          <ConfirmDeleteCardPopup
-            onClose={closeAllPopups}
-            isOpen={isDeleteCardPopupOpen}
-            onConfirmDeleteCard={handleCardDelete}
-            isLoading={isLoading}
-          ></ConfirmDeleteCardPopup>
+    <Router>
+      <CurrentUserContext.Provider value={currentUser}>
+        <div className="App">
+          <div className="page">
+            <Switch>
+              <Route exact path="/">
+                {isLoggedIn ? (
+                  <Redirect to="/main" />
+                ) : (
+                  <Redirect to="/signup" />
+                )}
+              </Route>
+              <Route path="/signin">
+                <Login
+                  title="Вход"
+                  button="Войти"
+                  handleLogin={handleLogin}
+                  emamil={email}
+                />
+              </Route>
+              <Route path="/signup">
+                <Register
+                  title="Регистрация"
+                  button="Зарегистрироваться"
+                  onClick={<Link to="/signin" />}
+                />
+              </Route>
+              <ProtectedRoute
+                path="/main"
+                component={Main}
+                loggedIn={isLoggedIn}
+                onEditProfile={handleEditProfileClick}
+                onEditAvatar={handleEditAvatarClick}
+                onAddPlace={handleAddPlaceClick}
+                onCardClick={handleCardClick}
+                cards={cards}
+                onCardLike={handleCardLike}
+                onCardDelete={handleDeleteCardClick}
+                isOpen={selectedCard.isOpen}
+                src={selectedCard.link}
+                name={selectedCard.name}
+                onClose={closeAllPopups}
+                isOpenProfilePopup={isEditProfilePopupOpen}
+                onUpdateUser={handleUpdateUser}
+                isLoading={isLoading}
+                isOpenAddPlace={isAddPlacePopupOpen}
+                onAddCard={handleAddCardSubmit}
+                isOpenAvatar={isEditAvatarPopupOpen}
+                onUpdateAvatar={handleUpdateAvatar}
+                isOpenDeleteCard={isDeleteCardPopupOpen}
+                onConfirmDeleteCard={handleCardDelete}
+                onClick={signOut}
+                email={email}
+                faded={isLoggedIn ? "faded" : ""}
+              ></ProtectedRoute>
+            </Switch>
+          </div>
         </div>
-      </div>
-    </CurrentUserContext.Provider>
+      </CurrentUserContext.Provider>
+    </Router>
   );
 }
 
