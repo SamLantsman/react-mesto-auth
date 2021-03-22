@@ -19,16 +19,16 @@ function Login(props) {
   }
 
   function handleSubmit(e) {
-    console.log("хуй");
     e.preventDefault();
     auth
       .authorize(password, email)
       .then((data) => {
+        console.log(data.token);
         if (data.token) {
           props.handleLogin(email);
           history.push("/main");
-          setEmail("");
-          setPassword("");
+          // setEmail("");
+          // setPassword("");
         }
       })
       .catch((err) => console.log(err));

@@ -7,15 +7,11 @@ import Login from "../components/Login";
 import Register from "../components/Register";
 import ProtectedRoute from "./ProtectedRoute";
 import { CurrentUserContext } from "../contexts/CurrentUserContext";
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  Redirect,
-  Link,
-} from "react-router-dom";
+import { Switch, Route, useHistory, Link, Redirect } from "react-router-dom";
 
 function App() {
+  let history = useHistory();
+
   const [currentUser, setCurrentUser] = React.useState({});
 
   const [isLoggedIn, setIsLoggedIn] = React.useState(false);
@@ -45,6 +41,12 @@ function App() {
   React.useEffect(() => {
     tockenCheck();
   }, []);
+
+  React.useEffect(() => {
+    if (isLoggedIn) {
+      history.push("/main");
+    }
+  }, [isLoggedIn, history]);
 
   function handleCardLike(card) {
     const isLiked = card.likes.some((i) => i._id === currentUser._id);
@@ -195,12 +197,16 @@ function App() {
   function tockenCheck() {
     const token = localStorage.getItem("token");
     if (token) {
-      auth.getContent(token).then((res) => {
-        if (res) {
-          setIsLoggedIn(true);
-          // history.push("/main");
-        }
-      });
+      auth
+        .getContent(token)
+        .then((res) => {
+          if (res) {
+            setIsLoggedIn(true);
+            setEmail(res.data.email);
+            history.push("/main");
+          }
+        })
+        .catch((e) => console.log(e));
     }
   }
 
@@ -210,66 +216,60 @@ function App() {
   }
 
   return (
-    <Router>
-      <CurrentUserContext.Provider value={currentUser}>
-        <div className="App">
-          <div className="page">
-            <Switch>
-              <Route exact path="/">
-                {isLoggedIn ? (
-                  <Redirect to="/main" />
-                ) : (
-                  <Redirect to="/signup" />
-                )}
-              </Route>
-              <Route path="/signin">
-                <Login
-                  title="Вход"
-                  button="Войти"
-                  handleLogin={handleLogin}
-                  emamil={email}
-                />
-              </Route>
-              <Route path="/signup">
-                <Register
-                  title="Регистрация"
-                  button="Зарегистрироваться"
-                  onClick={<Link to="/signin" />}
-                />
-              </Route>
-              <ProtectedRoute
-                path="/main"
-                component={Main}
-                loggedIn={isLoggedIn}
-                onEditProfile={handleEditProfileClick}
-                onEditAvatar={handleEditAvatarClick}
-                onAddPlace={handleAddPlaceClick}
-                onCardClick={handleCardClick}
-                cards={cards}
-                onCardLike={handleCardLike}
-                onCardDelete={handleDeleteCardClick}
-                isOpen={selectedCard.isOpen}
-                src={selectedCard.link}
-                name={selectedCard.name}
-                onClose={closeAllPopups}
-                isOpenProfilePopup={isEditProfilePopupOpen}
-                onUpdateUser={handleUpdateUser}
-                isLoading={isLoading}
-                isOpenAddPlace={isAddPlacePopupOpen}
-                onAddCard={handleAddCardSubmit}
-                isOpenAvatar={isEditAvatarPopupOpen}
-                onUpdateAvatar={handleUpdateAvatar}
-                isOpenDeleteCard={isDeleteCardPopupOpen}
-                onConfirmDeleteCard={handleCardDelete}
-                onClick={signOut}
-                email={email}
-                faded={isLoggedIn ? "faded" : ""}
-              ></ProtectedRoute>
-            </Switch>
-          </div>
+    <CurrentUserContext.Provider value={currentUser}>
+      <div className="App">
+        <div className="page">
+          <Switch>
+            <Route exact path="/">
+              {isLoggedIn ? <Redirect to="/main" /> : <Redirect to="/signup" />}
+            </Route>
+            <Route path="/signin">
+              <Login
+                title="Вход"
+                button="Войти"
+                handleLogin={handleLogin}
+                emamil={email}
+              />
+            </Route>
+            <Route path="/signup">
+              <Register
+                title="Регистрация"
+                button="Зарегистрироваться"
+                onClick={<Link to="/signin" />}
+              />
+            </Route>
+            <ProtectedRoute
+              path="/main"
+              component={Main}
+              loggedIn={isLoggedIn}
+              onEditProfile={handleEditProfileClick}
+              onEditAvatar={handleEditAvatarClick}
+              onAddPlace={handleAddPlaceClick}
+              onCardClick={handleCardClick}
+              cards={cards}
+              onCardLike={handleCardLike}
+              onCardDelete={handleDeleteCardClick}
+              isOpen={selectedCard.isOpen}
+              src={selectedCard.link}
+              name={selectedCard.name}
+              onClose={closeAllPopups}
+              isOpenProfilePopup={isEditProfilePopupOpen}
+              onUpdateUser={handleUpdateUser}
+              isLoading={isLoading}
+              isOpenAddPlace={isAddPlacePopupOpen}
+              onAddCard={handleAddCardSubmit}
+              isOpenAvatar={isEditAvatarPopupOpen}
+              onUpdateAvatar={handleUpdateAvatar}
+              isOpenDeleteCard={isDeleteCardPopupOpen}
+              onConfirmDeleteCard={handleCardDelete}
+              onClick={signOut}
+              email={email}
+              faded={isLoggedIn ? "faded" : ""}
+            ></ProtectedRoute>
+          </Switch>
         </div>
-      </CurrentUserContext.Provider>
-    </Router>
+      </div>
+    </CurrentUserContext.Provider>
   );
 }
 
