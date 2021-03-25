@@ -6,11 +6,14 @@ import * as auth from "../utils/auth";
 import Login from "../components/Login";
 import Register from "../components/Register";
 import ProtectedRoute from "./ProtectedRoute";
+import InfoToolTip from "./InfoToolTip";
+import successSign from "../images/info-tool-tip__success.png";
+import failSign from "../images/info-tool-tip__fail.png";
 import { CurrentUserContext } from "../contexts/CurrentUserContext";
 import { Switch, Route, useHistory, Link, Redirect } from "react-router-dom";
 
 function App() {
-  let history = useHistory();
+  const history = useHistory();
 
   const [currentUser, setCurrentUser] = React.useState({});
 
@@ -189,9 +192,18 @@ function App() {
 
   const [email, setEmail] = React.useState("");
 
-  function handleLogin(email) {
+  function handleLogin(data) {
+    auth
+      .authorize(data.password, data.email)
+      .then((data) => {
+        console.log(data.token);
+        if (data.token) {
+          history.push("/main");
+        }
+      })
+      .catch((err) => console.log(err));
     setIsLoggedIn(true);
-    setEmail(email);
+    setEmail(data.email);
   }
 
   function tockenCheck() {
@@ -215,6 +227,39 @@ function App() {
     setIsLoggedIn(false);
   }
 
+  const [isRegistered, setIsRegistered] = React.useState(false);
+
+  const [isInfoToolTipPopupOpen, setIsInfoToolTopPopupOpen] = React.useState(
+    false
+  );
+
+  function closeRegistrationPopup() {
+    setIsInfoToolTopPopupOpen(false);
+    if (isRegistered) {
+      history.push("/signin");
+    }
+  }
+
+  function handleRegistration(data) {
+    auth
+      .register(data.password, data.email)
+      .then((res) => {
+        if (res) {
+          console.log("я тут");
+          setIsRegistered(true);
+          console.log(isRegistered);
+          setIsInfoToolTopPopupOpen(true);
+          console.log(isInfoToolTipPopupOpen);
+        } else {
+          setIsInfoToolTopPopupOpen(true);
+          return {
+            message: "Что-то пошло не так!",
+          };
+        }
+      })
+      .catch((err) => console.log(err));
+  }
+
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <div className="App">
@@ -227,8 +272,11 @@ function App() {
               <Login
                 title="Вход"
                 button="Войти"
-                handleLogin={handleLogin}
-                emamil={email}
+                handleSubmit={handleLogin}
+                email={email}
+                isInfoToolTipPopupOpen={isInfoToolTipPopupOpen}
+                isRegistered={isRegistered}
+                closeRegistrationPopup={closeRegistrationPopup}
               />
             </Route>
             <Route path="/signup">
@@ -236,6 +284,18 @@ function App() {
                 title="Регистрация"
                 button="Зарегистрироваться"
                 onClick={<Link to="/signin" />}
+                handleSubmit={handleRegistration}
+              />
+              <InfoToolTip
+                isOpen={isInfoToolTipPopupOpen}
+                title={
+                  isRegistered
+                    ? "Вы успешно зарегистрировались!"
+                    : "Что-то пошло не так! Попробуйте еще раз."
+                }
+                src={isRegistered ? successSign : failSign}
+                name="success"
+                onClose={closeRegistrationPopup}
               />
             </Route>
             <ProtectedRoute

@@ -1,5 +1,4 @@
 import React from "react";
-import * as auth from "../utils/auth";
 import { useHistory } from "react-router-dom";
 import Header from "./Header";
 
@@ -20,18 +19,7 @@ function Login(props) {
 
   function handleSubmit(e) {
     e.preventDefault();
-    auth
-      .authorize(password, email)
-      .then((data) => {
-        console.log(data.token);
-        if (data.token) {
-          props.handleLogin(email);
-          history.push("/main");
-          // setEmail("");
-          // setPassword("");
-        }
-      })
-      .catch((err) => console.log(err));
+    props.handleSubmit({ password: password, email: email });
   }
 
   function handleRedirect() {
@@ -46,7 +34,7 @@ function Login(props) {
         email={props.email}
       />
       <div className="login">
-        <form noValidate>
+        <form noValidate onSubmit={handleSubmit}>
           <h3 className="login__heading">{props.title}</h3>
           <input
             type="text"
@@ -62,11 +50,7 @@ function Login(props) {
             onChange={handlePasswordChange}
             required
           />
-          <button
-            className="login__button"
-            type="submit"
-            onClick={handleSubmit}
-          >
+          <button className="login__button" type="submit">
             {props.button}
           </button>
         </form>
