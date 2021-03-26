@@ -3,7 +3,7 @@ import { useHistory } from "react-router-dom";
 import Header from "./Header";
 
 function Login(props) {
-  let history = useHistory();
+  const history = useHistory();
 
   const [email, setEmail] = React.useState("");
 
@@ -41,6 +41,7 @@ function Login(props) {
             placeholder="Email"
             className="login__email"
             onChange={handleEmailChange}
+            value={email}
             required
           />
           <input

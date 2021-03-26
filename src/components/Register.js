@@ -36,7 +36,7 @@ function Register(props) {
             placeholder="Email"
             className="register__email"
             onChange={handleEmailChange}
-            defaultValue=""
+            value={email}
             required
           />
           <input
